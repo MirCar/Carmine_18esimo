@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invito 18 anni</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Immagine -->
+  <div class="relative">
+    <img src="invito.png" alt="Invito" class="w-full h-auto">
+  </div>
+
+  <!-- Form di conferma presenza -->
+  <div class="text-center my-6">
+    <h2 class="text-2xl font-bold mb-4">Parteciperai alla festa?</h2>
+    <form id="rsvpForm" class="space-y-4 max-w-md mx-auto">
+      <input name="name" type="text" required placeholder="Il tuo nome" class="w-full p-3 rounded bg-gray-800 text-white" />
+      <textarea name="note" placeholder="Scrivi qui eventuali richieste..." class="w-full p-3 rounded bg-gray-800 text-white" rows="4"></textarea>
+      <input type="hidden" name="response" id="responseField">
+
+      <div class="flex justify-center space-x-4">
+        <button type="button" onclick="submitRSVP('Sì')" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white font-semibold">Sì</button>
+        <button type="button" onclick="submitRSVP('No')" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white font-semibold">No</button>
+      </div>
+    </form>
+    <p id="confirmationMsg" class="mt-4 text-green-400 hidden">Grazie per la conferma!</p>
+  </div>
+
+  <!-- Mappa Google Maps -->
+  <div class="text-center mb-10 px-4">
+    <h3 class="text-xl font-semibold mb-2">Dove si trova il Sea Garden restaurant</h3>
+    <div class="w-full max-w-3xl mx-auto">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2885.484580144789!2d14.798343576581605!3d40.654644944195315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133b982e96099d8b%3A0x9de4ae02eaf7f2d7!2sVia%20Generale%20Clark%2C%2010%2C%2084131%20Salerno%20SA%2C%20Italia!5e0!3m2!1sit!2sus!4v1718566000000!5m2!1sit!2sus" 
+        width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+
+  <!-- Script per invio dati -->
+  <script>
+    function submitRSVP(response) {
+      const form = document.getElementById('rsvpForm');
+      document.getElementById('responseField').value = response;
+      const formData = new FormData(form);
+
+      fetch("https://script.google.com/macros/s/AKfycbxZD6qHcNxauAsgDvKNsSUwA0k40kgZGRFFtZgCJLEWQ0KSlf4ujWDu-FQjKn88Gzr8/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById('confirmationMsg').classList.remove('hidden');
+        form.reset();
+      });
+    }
+  </script>
+</body>
+</html>
